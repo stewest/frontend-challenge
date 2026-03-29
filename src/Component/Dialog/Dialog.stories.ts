@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/html-vite"
+import type { Meta, StoryObj } from "@storybook/html-vite"
 import Component from "./dialog.twig"
 import Heading from "../../Atom/Heading/heading.twig"
 import "./Elements/Dialog"
@@ -6,7 +6,7 @@ import "./dialog.css"
 import "../Card/card.css"
 import { Heading as HeadingType, HeadingTypes, WysiwygText } from "@pnx-mixtape/ids-shape"
 
-export type Dialog = {
+type DialogStoryArgs = {
   title?: HeadingType
   content: WysiwygText
   dialogTitle: HeadingType
@@ -16,8 +16,9 @@ export type Dialog = {
   toggleText?: string
 }
 
-const meta: Meta<Dialog> = {
+const meta: Meta<DialogStoryArgs> = {
   tags: ["autodocs", "ids-mvp"],
+  title: "Component/Dialog",
   component: Component,
   args: {
     title: Heading({
@@ -70,7 +71,7 @@ const meta: Meta<Dialog> = {
 }
 
 export default meta
-type Story = StoryObj<Dialog>
+type Story = StoryObj<DialogStoryArgs>
 
 export const Dialog: Story = {
   args: {
