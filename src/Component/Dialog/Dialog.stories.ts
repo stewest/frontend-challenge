@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/html-vite"
+import { expect, userEvent, within } from "storybook/test"
 import Component from "./dialog.twig"
 import Heading from "../../Atom/Heading/heading.twig"
 import "./Elements/Dialog"
@@ -79,6 +80,35 @@ export const Dialog: Story = {
       "<p>This is the default story content text inside the dialog card part 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
     dialogContent:
       "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Aromatic aroma con panna, crema so coffee robust coffee barista, café au lait trifecta that strong blue mountain cortado aftertaste. Aroma extraction french press, skinny sweet, blue mountain cup roast barista, beans, extra cappuccino mug crema strong. Americano caffeine white, con panna saucer sit, con panna eu, carajillo aftertaste kopi-luwak, body aftertaste cup single origin café au lait saucer</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const dialogElement = canvasElement.querySelector(".mx-dialog__element")
+    if (!dialogElement) throw new Error("Dialog element not found.")
+
+    await step("starts closed", async () => {
+      await expect(dialogElement).toHaveAttribute("data-state", "closed")
+    })
+
+    await step("opens when clicking open trigger", async () => {
+      const openButton = canvas.getByRole("button", { name: "Open dialog" })
+      await userEvent.click(openButton)
+      await expect(dialogElement).toHaveAttribute("data-state", "open")
+    })
+
+    await step("closes when clicking close trigger", async () => {
+      const closeButton = canvas.getByRole("button", { name: "Close dialog" })
+      await userEvent.click(closeButton)
+      await expect(dialogElement).toHaveAttribute("data-state", "closed")
+    })
+
+    await step("closes when pressing Escape", async () => {
+      const openButton = canvas.getByRole("button", { name: "Open dialog" })
+      await userEvent.click(openButton)
+      await expect(dialogElement).toHaveAttribute("data-state", "open")
+      await userEvent.keyboard("{Escape}")
+      await expect(dialogElement).toHaveAttribute("data-state", "closed")
+    })
   },
 }
 
